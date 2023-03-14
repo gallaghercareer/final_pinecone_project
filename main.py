@@ -1,6 +1,6 @@
 import download_mp3_1 
 #import embeddings_pinecone_3
-#import whisper_transcribe_2
+import whisper_transcribe_2
 
 #Define a function to read in a single line file
 def read_api_key(input_file):
@@ -49,8 +49,9 @@ def read_api_key(input_file):
 #input("Enter the channelID to download MP3s. Enter a second arg for limit (leave blank if you want to download entire youtube channel): ")
 #download_mp3_1.download_mp3s('UCv83tO5cePwHMt1952IVVHw',1)
 
-download_mp3_1.download_mp3s('UCv83tO5cePwHMt1952IVVHw')
-#whisper_transcribe_2.transcribe_mp3()
+#download_mp3_1.download_mp3s('UCv83tO5cePwHMt1952IVVHw')
+whisper_transcribe_2.transcribe_mp3()
+
 
 
 

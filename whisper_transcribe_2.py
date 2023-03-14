@@ -4,7 +4,8 @@ import shutil
 import whisper
 import ffmpeg
 from hashlib import sha256
-
+import json
+import torch
 #pip3 install ffmeg-python
 #pip3 install numba
 #pip3 install git+https://github.com/openai/whisper.git 
@@ -14,13 +15,17 @@ from hashlib import sha256
 
 
 def add_backslash(url):
-        url =  input_str.replace('[', '/')
-        url = input_str.replace(']',':')
+        url =  url.replace('[', '/')
+        url = url.replace(']',':')
+        url = url.replace("'","?")
         return url
 
 def transcribe_mp3():
+    dictionary = [{}]
     
-    model = whisper.load_model("base")
+
+    devices = torch.device("cuda:0" if torch.cuda.is_available() else "cpu") 
+    model = whisper.load_model("medium" , device =devices)
     #current working directory
     cwd = os.getcwd()
     print("outer reached")
@@ -31,26 +36,22 @@ def transcribe_mp3():
         
         if file.endswith('.mp3'):        
             
-            url = 
+            url = add_backslash(file) 
             result = model.transcribe(file)
-
-            # Define the path to the new directory
-            #new_directory = os.path.join(".", "transcribed_text")
-
-            # Create the new directory if it doesn't already exist
-
-            #os.makedirs(new_directory, exist_ok=True)
-            #print(result['text'])
             
-            print(result)
+            print(result[text])
             filename = file + ".txt"
             
-            data = file
-            print(data)
-            print(type(data))
+
+            dictionary = [{
+            "text" : result['text'],
+            "url" : url,
+            'time' : result['start'],
+
+            }]
             
-            dictionary = [{}]
-            try:
+            
+            '''try:
                 with open(filename, "w+") as f:
                     for key, value in dictionary.items():
                         f.write(result['text'])
@@ -60,7 +61,8 @@ def transcribe_mp3():
             
             print("CLOSING FILE")
             f.close()
-            shutil.move(filename, './transcribed')    
-           # file_contents_path = file_contents.name
+            shutil.move(filename, './transcribed')  
+            '''  
+            #file_contents_path = file_contents.name
             
        
