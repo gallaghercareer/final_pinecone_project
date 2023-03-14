@@ -6,6 +6,7 @@ from hashlib import sha256
 import os
 from pathlib import Path
 
+youtube_video_url = ''
 
 def remove_backslash(url):
     url = url.replace('/', '[')
@@ -22,7 +23,7 @@ def read_api_key(input_file):
         return string_variable
 
 def download_mp3s(channel_id, limit=None):
-    videos = scrapetube.get_channel(channel_id, limit)
+    videos = scrapetube.get_channel(channel_id, limit=1)
     
     counter = 0
     audioUrl_list =[]
@@ -30,7 +31,7 @@ def download_mp3s(channel_id, limit=None):
     # Set options for downloading the audio file
     options = {
         'format': 'bestaudio/best',
-        'outtmpl': 'C:/mp3downloaded/video',
+        'outtmpl': 'C:/users/jp/desktop/pinecone_project/final_pinecone_project/video',
         'postprocessors': [{
             'key': 'FFmpegExtractAudio',
             'preferredcodec': 'mp3',
@@ -43,6 +44,7 @@ def download_mp3s(channel_id, limit=None):
 
     for video in videos:
         #create list of video ids    
+        youtube_video_url = 'https://www.youtube.com/watch?v='+ video['videoId']
         audioUrl_list.append('https://www.youtube.com/watch?v=' + video['videoId']) 
         
 
@@ -57,7 +59,7 @@ def download_mp3s(channel_id, limit=None):
         # Download the audio file
         ydl.download([audio])
         
-        os.rename('C:\\mp3downloaded\\video.mp3', f'C:\\mp3downloaded\\{filename}' + '.mp3')
+        os.rename('C:\\users\\jp\\desktop\\pinecone_project\\final_pinecone_project\\video.mp3', f'C:\\users\\jp\\desktop\\pinecone_project\\final_pinecone_project\\{filename}' + '.mp3')
        
         counter = counter + 1
 
