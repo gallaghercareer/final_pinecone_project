@@ -64,5 +64,3 @@ def download_mp3s(channel_id, limit=None):
         #os.rename('C:\\users\\jp\\desktop\\pinecone_project\\final_pinecone_project\\video.mp3', f'C:\\users\\jp\\desktop\\pinecone_project\\final_pinecone_project\\{filename}' + '.mp3')
        
         counter = counter + 1
-
-    

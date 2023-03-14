@@ -47,6 +47,6 @@ def transcribe_mp3():
             segment_dict = get_segment_dict(result, url)
                         
             with open(filename, 'w') as file:
-                json.dump(segment_dict, file)
+                file.write(str(segment_dict))
                 
             shutil.move(filename, f'./{filename}')
