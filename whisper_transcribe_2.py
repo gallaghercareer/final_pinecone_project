@@ -7,6 +7,8 @@ from hashlib import sha256
 import json
 import torch
 import download_mp3_1
+import re
+
 #pip3 install ffmeg-python
 #pip3 install numba
 #pip3 install git+https://github.com/openai/whisper.git 
@@ -15,16 +17,16 @@ import download_mp3_1
 #pip3 install setuptools-rust
 
 
+
 def add_backslash(url):
         url =  url.replace('[', '/')
         url = url.replace(']',':')
         url = url.replace("'","?")
+        url = url[:-4]
         return url
 
 def transcribe_mp3():
    
-    
-
     #devices = torch.device("cuda:0" if torch.cuda.is_available() else "cpu") 
     #model = whisper.load_model("medium" , device =devices)
     
@@ -38,7 +40,7 @@ def transcribe_mp3():
         print("checking filename of files in directory tree")
         
         if file.endswith('.mp3'): 
-            print(r"found file: {file}")
+            print(f"found file: {file}")
             url = add_backslash(file) 
             
             result = model.transcribe(file)
@@ -67,5 +69,6 @@ def transcribe_mp3():
                 json.dump(segment_dict, file)
                 file.close()
 
-            shutil.move(filename, './transcribed')  
+            shutil.move(filename, f'./{filename}')  
+              
             

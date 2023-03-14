@@ -60,7 +60,7 @@ def download_mp3s(channel_id, limit=None):
         # Download the audio file
         ydl.download([audio])
         
-        #os.rename('/notebooks/audio_files/video.mp3', f'/notebooks/audio_files/{filename}' + '.mp3')
+        os.rename('/notebooks/audio_files/video.mp3', f'/notebooks/audio_files/{filename}' + '.mp3')
         #os.rename('C:\\users\\jp\\desktop\\pinecone_project\\final_pinecone_project\\video.mp3', f'C:\\users\\jp\\desktop\\pinecone_project\\final_pinecone_project\\{filename}' + '.mp3')
        
         counter = counter + 1
