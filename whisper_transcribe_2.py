@@ -1,74 +1,52 @@
 import os
-import subprocess
 import shutil
 import whisper
-import ffmpeg
-from hashlib import sha256
 import json
-import torch
-import download_mp3_1
 import re
 
-#pip3 install ffmeg-python
-#pip3 install numba
-#pip3 install git+https://github.com/openai/whisper.git 
-#pip3 install --upgrade --no-deps --force-reinstall git+https://github.com/openai/whisper.git
-#sudo apt upgrade && sudo apt install ffmpeg
-#pip3 install setuptools-rust
-
-
-
 def add_backslash(url):
-        url =  url.replace('[', '/')
-        url = url.replace(']',':')
-        url = url.replace("'","?")
-        url = url[:-4]
-        return url
+    url = url.replace('[', '/')
+    url = url.replace(']', ':')
+    url = url.replace("'", '?')
+    return url
+
+def get_segment_dict(result, url):
+    segment_dict = {}
+    url_without_extension = url[:-4]
+    for segment in result['segments']:
+        segment_dict[segment['id']] = {
+            'url': url_without_extension,
+            'start': segment['start'],
+            'end': segment['end'],
+            'text': segment['text'],
+            'tokens': segment['tokens'],
+            'temperature': segment['temperature'],
+            'avg_logprob': segment['avg_logprob'],
+            'compression_ratio': segment['compression_ratio'],
+            'no_speech_prob': segment['no_speech_prob']
+        }
+    return segment_dict
 
 def transcribe_mp3():
-   
-    #devices = torch.device("cuda:0" if torch.cuda.is_available() else "cpu") 
-    #model = whisper.load_model("medium" , device =devices)
-    
     model = whisper.load_model("base")
-    #current working directory
     cwd = os.getcwd()
     print("outer reached")
-    # Iterate through all files and directories in the input directory
-    
-    for file in os.listdir("."):   
-        print("checking filename of files in directory tree")
+
+    with os.scandir(cwd) as entries:
+        mp3_files = (entry for entry in entries if entry.is_file() and entry.name.endswith('.mp3'))
         
-        if file.endswith('.mp3'): 
-            print(f"found file: {file}")
-            url = add_backslash(file) 
+        for mp3_file in mp3_files:
+            print(f"found file: {mp3_file.name}")
             
-            result = model.transcribe(file)
-            
-            print(result)
-            filename = file + ".txt"
-            
-         
-                
-            segment_dict = {}
-            for segment in result['segments']:
-                segment_dict[segment['id']] = {
-                    'url': url,
-                    'start': segment['start'],
-                    'end': segment['end'],
-                    'text': segment['text'],
-                    'tokens': segment['tokens'],
-                    'temperature': segment['temperature'],
-                    'avg_logprob': segment['avg_logprob'],
-                    'compression_ratio': segment['compression_ratio'],
-                    'no_speech_prob': segment['no_speech_prob']
-                }
-                
-                
+            url = add_backslash(mp3_file.name)
+              
+            result = model.transcribe(mp3_file.path)
+            #print(result)
+
+            filename = mp3_file.name[:-4] + ".txt"
+            segment_dict = get_segment_dict(result, url)
+                        
             with open(filename, 'w') as file:
                 json.dump(segment_dict, file)
-                file.close()
-
-            shutil.move(filename, f'./{filename}')  
-              
-            
+                
+            shutil.move(filename, f'./{filename}')
