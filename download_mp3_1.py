@@ -31,7 +31,8 @@ def download_mp3s(channel_id, limit=None):
     # Set options for downloading the audio file
     options = {
         'format': 'bestaudio/best',
-        'outtmpl': 'C:/users/jp/desktop/pinecone_project/final_pinecone_project/video',
+        #'outtmpl': 'C:/users/jp/desktop/pinecone_project/final_pinecone_project/video',
+        'outtmpl': '/notebooks/audio_files/video',
         'postprocessors': [{
             'key': 'FFmpegExtractAudio',
             'preferredcodec': 'mp3',
@@ -59,7 +60,8 @@ def download_mp3s(channel_id, limit=None):
         # Download the audio file
         ydl.download([audio])
         
-        os.rename('C:\\users\\jp\\desktop\\pinecone_project\\final_pinecone_project\\video.mp3', f'C:\\users\\jp\\desktop\\pinecone_project\\final_pinecone_project\\{filename}' + '.mp3')
+        #os.rename('/notebooks/audio_files/video.mp3', f'/notebooks/audio_files/{filename}' + '.mp3')
+        #os.rename('C:\\users\\jp\\desktop\\pinecone_project\\final_pinecone_project\\video.mp3', f'C:\\users\\jp\\desktop\\pinecone_project\\final_pinecone_project\\{filename}' + '.mp3')
        
         counter = counter + 1
 

@@ -25,18 +25,22 @@ def transcribe_mp3():
    
     
 
-    devices = torch.device("cuda:0" if torch.cuda.is_available() else "cpu") 
-    model = whisper.load_model("medium" , device =devices)
+    #devices = torch.device("cuda:0" if torch.cuda.is_available() else "cpu") 
+    #model = whisper.load_model("medium" , device =devices)
+    
+    model = whisper.load_model("base")
     #current working directory
     cwd = os.getcwd()
     print("outer reached")
-	# Iterate through all files and directories in the input directory
+    # Iterate through all files and directories in the input directory
     
     for file in os.listdir("."):   
         print("checking filename of files in directory tree")
         
-        if file.endswith('.mp3'):        
+        if file.endswith('.mp3'): 
+            print(r"found file: {file}")
             url = add_backslash(file) 
+            
             result = model.transcribe(file)
             
             print(result)
@@ -47,6 +51,7 @@ def transcribe_mp3():
             segment_dict = {}
             for segment in result['segments']:
                 segment_dict[segment['id']] = {
+                    'url': url,
                     'start': segment['start'],
                     'end': segment['end'],
                     'text': segment['text'],
