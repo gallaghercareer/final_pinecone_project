@@ -1,0 +1,6 @@
+yt_dlp
+scrapetube
+openai
+pinecone-client
+setuptools-rust
+git+https://github.com/openai/whisper.git
