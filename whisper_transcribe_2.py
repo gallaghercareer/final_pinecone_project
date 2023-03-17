@@ -3,6 +3,7 @@ import shutil
 import whisper
 import json
 import re
+import torch
 
 def add_backslash(url):
     url = url.replace('[', '/')
@@ -28,25 +29,34 @@ def get_segment_dict(result, url):
     return segment_dict
 
 def transcribe_mp3():
-    model = whisper.load_model("base")
+    print("beginning transcription script")
+    devices = torch.device("cuda:0" if torch.cuda.is_available() else "cpu") 
+    model = whisper.load_model("medium" , device =devices)
     cwd = os.getcwd()
-    print("outer reached")
+    
 
     with os.scandir(cwd) as entries:
         mp3_files = (entry for entry in entries if entry.is_file() and entry.name.endswith('.mp3'))
+        list_mp3_files = list(mp3_files)
+        total = len(list_mp3_files)        
+        counter = 1
         
-        for mp3_file in mp3_files:
-            print(f"found file: {mp3_file.name}")
-            
+        for mp3_file in list_mp3_files:
+                       
+            print(f"transcribing {counter} of {total}")
+
             url = add_backslash(mp3_file.name)
-              
+
             result = model.transcribe(mp3_file.path)
-            #print(result)
+            print("file transcribed")
 
             filename = mp3_file.name[:-4] + ".txt"
             segment_dict = get_segment_dict(result, url)
-                        
+
             with open(filename, 'w') as file:
                 file.write(str(segment_dict))
-                
+
             shutil.move(filename, f'./{filename}')
+            counter = counter + 1
+    
+    print("transcriptions COMPLETE")

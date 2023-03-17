@@ -23,7 +23,7 @@ def read_api_key(input_file):
         return string_variable
 
 def download_mp3s(channel_id, limit=None):
-    videos = scrapetube.get_channel(channel_id, limit=1)
+    videos = scrapetube.get_channel(channel_id)
     
     counter = 0
     audioUrl_list =[]
@@ -56,11 +56,13 @@ def download_mp3s(channel_id, limit=None):
             break
 
         filename = remove_backslash(audio)
-       
+        length = len(audioUrl_list)
         # Download the audio file
         ydl.download([audio])
-        
+        print(f"Video {counter} of {length} downloaded")
         os.rename('/notebooks/audio_files/video.mp3', f'/notebooks/audio_files/{filename}' + '.mp3')
         #os.rename('C:\\users\\jp\\desktop\\pinecone_project\\final_pinecone_project\\video.mp3', f'C:\\users\\jp\\desktop\\pinecone_project\\final_pinecone_project\\{filename}' + '.mp3')
        
         counter = counter + 1
+
+    
